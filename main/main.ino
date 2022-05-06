@@ -48,7 +48,6 @@ void HttpPostForward(AsyncWebServerRequest *request) {
 
 void HttpPostBackward(AsyncWebServerRequest *request) {
   request->send(200);
-  Serial.println("backward");
   ledcWrite(0, 0);
   ledcWrite(1, 255);
   ledcWrite(2, 0);
@@ -62,7 +61,6 @@ void HttpPostBackward(AsyncWebServerRequest *request) {
 
 void HttpPostStop(AsyncWebServerRequest *request) {
   request->send(200);
-  Serial.println("stop");
   ledcWrite(0, 0);
   ledcWrite(1, 0);
   ledcWrite(2, 0);
@@ -71,20 +69,26 @@ void HttpPostStop(AsyncWebServerRequest *request) {
 
 void HttpPostLeft(AsyncWebServerRequest *request) {
   request->send(200);
-  Serial.println("left");
   ledcWrite(0, 255);
   ledcWrite(1, 0);
+  ledcWrite(2, 0);
+  ledcWrite(3, 255);
   delay(1000);
   ledcWrite(0, 0);
   ledcWrite(1, 0);
+  ledcWrite(2, 0);
+  ledcWrite(3, 0);
 }
 
 void HttpPostRight(AsyncWebServerRequest *request) {
   request->send(200);
-  Serial.println("left");
+  ledcWrite(0, 0);
+  ledcWrite(1, 255);
   ledcWrite(2, 255);
   ledcWrite(3, 0);
   delay(1000);
+  ledcWrite(0, 0);
+  ledcWrite(1, 0);
   ledcWrite(2, 0);
   ledcWrite(3, 0);
 }
