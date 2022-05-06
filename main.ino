@@ -21,7 +21,7 @@ const char *ssid = "ShibaInu's Esp32 WebServer";
 const char *password = "0000000000";
 IPAddress local_IP(192, 168, 4, 1);
 IPAddress gatway(192, 168, 4, 1);
-IPAddress subnet(192, 168, 4, 1);
+IPAddress subnet(255, 255, 255, 0);
 
 AsyncWebServer server(80);
 
