@@ -28,69 +28,35 @@ AsyncWebServer server(80);
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HELGTH, &Wire, OLE_RESET);
 bool oledStatus = true;
 
+int MODE = 2;
+
 void HttpGetHome(AsyncWebServerRequest *request) {
   request->send(SPIFFS, "/index.html", "text/html");
 }
 
 void HttpPostForward(AsyncWebServerRequest *request) {
+  MODE = 0;
   request->send(200);
-  Serial.println("forward");
-  ledcWrite(0, 255);
-  ledcWrite(1, 0);
-  ledcWrite(2, 255);
-  ledcWrite(3, 0);
-  delay(1000);
-  ledcWrite(0, 0);
-  ledcWrite(1, 0);
-  ledcWrite(2, 0);
-  ledcWrite(3, 0);
 }
 
 void HttpPostBackward(AsyncWebServerRequest *request) {
+  MODE = 1;
   request->send(200);
-  ledcWrite(0, 0);
-  ledcWrite(1, 255);
-  ledcWrite(2, 0);
-  ledcWrite(3, 255);
-  delay(1000);
-  ledcWrite(0, 0);
-  ledcWrite(1, 0);
-  ledcWrite(2, 0);
-  ledcWrite(3, 0);
 }
 
 void HttpPostStop(AsyncWebServerRequest *request) {
+  MODE = 2;
   request->send(200);
-  ledcWrite(0, 0);
-  ledcWrite(1, 0);
-  ledcWrite(2, 0);
-  ledcWrite(3, 0);
 }
 
 void HttpPostLeft(AsyncWebServerRequest *request) {
+  MODE = 3;
   request->send(200);
-  ledcWrite(0, 255);
-  ledcWrite(1, 0);
-  ledcWrite(2, 0);
-  ledcWrite(3, 255);
-  delay(1000);
-  ledcWrite(0, 0);
-  ledcWrite(1, 0);
-  ledcWrite(2, 0);
-  ledcWrite(3, 0);
 }
 
 void HttpPostRight(AsyncWebServerRequest *request) {
+  MODE = 4;
   request->send(200);
-  ledcWrite(0, 0);
-  ledcWrite(1, 255);
-  ledcWrite(2, 255);
-  ledcWrite(3, 0);
-  delay(1000);
-  ledcWrite(0, 0);
-  ledcWrite(1, 0);
-  ledcWrite(2, 0);
-  ledcWrite(3, 0);
 }
 
 void setup() {
@@ -125,16 +91,7 @@ void setup() {
   Serial.println("softAP Opened.");
   Serial.print("softAPIP: ");
   Serial.println(WiFi.softAPIP());
-  if (oledStatus) {
-    display.clearDisplay();
-    display.setTextSize(1);
-    display.setTextColor(WHITE, BLACK);
-    display.setCursor(0, 0);
-    display.print("softAPIP:");
-    display.setCursor(53, 0);
-    display.print(WiFi.softAPIP());
-    display.display();
-  }
+  OLED_UPLOAD();
 
   server.on("/", HTTP_GET, HttpGetHome);
   server.on("/forward", HTTP_POST, HttpPostForward);
@@ -146,4 +103,65 @@ void setup() {
   server.begin();
 }
 
-void loop() {}
+void loop() {
+  switch (MODE) {
+    case 0:
+      ledcWrite(0, 255);
+      ledcWrite(1, 0);
+      ledcWrite(2, 255);
+      ledcWrite(3, 0);
+      break;
+    case 1:
+      ledcWrite(0, 0);
+      ledcWrite(1, 255);
+      ledcWrite(2, 0);
+      ledcWrite(3, 255);
+      break;
+    case 2:
+      ledcWrite(0, 0);
+      ledcWrite(1, 0);
+      ledcWrite(2, 0);
+      ledcWrite(3, 0);
+      break;
+    case 3:
+      ledcWrite(0, 255);
+      ledcWrite(1, 0);
+      ledcWrite(2, 0);
+      ledcWrite(3, 255);
+      break;
+    case 4:
+      ledcWrite(0, 0);
+      ledcWrite(1, 255);
+      ledcWrite(2, 255);
+      ledcWrite(3, 0);
+      break;
+  }
+  OLED_UPLOAD();
+}
+
+void OLED_UPLOAD() {
+  if (oledStatus) {
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setTextColor(WHITE, BLACK);
+    display.setCursor(0, 0);
+    display.print("softAPIP:");
+    display.setCursor(53, 0);
+    display.print(WiFi.softAPIP());
+    display.setCursor(0, 8);
+    display.print("Using:");
+    display.setCursor(36, 8);
+    display.println(WiFi.softAPgetStationNum());
+    display.setCursor(0, 16);
+    display.print("MODE:");
+    display.setCursor(30, 16);
+    switch (MODE) {
+      case 0: display.println("FORWARD"); break;
+      case 1: display.println("BACKWARD"); break;
+      case 2: display.println("STOP"); break;
+      case 3: display.println("LEFT"); break;
+      case 4: display.println("RIGHT"); break;
+    }
+    display.display();
+  }
+}
