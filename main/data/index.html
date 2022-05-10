@@ -1,19 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <style>
-            .button {
-                border: none;
-                color: white;
-                padding: 15px 32px;
-                text-align: center;
-                text-decoration: none;
-                display: inline-block;
-                font-size: 16px;
-                margin: 4px 2px;
-                cursor: pointer;
-            }
-        </style>
+        <style></style>
         <script>
             function forward_button() {
                 fetch("http://192.168.4.1/forward", { method: "POST" });
@@ -35,12 +23,21 @@
                 fetch("http://192.168.4.1/right", { method: "POST" });
             }
         </script>
+
+        <link rel="stylesheet" href="./tocas.min.css">
+        <script src="./tocas.min.js"></script>
     </head>
     <body>
-        <button onclick="forward_button()">Forward</button>
-        <button onclick="backward_button()">Backward</button>
-        <button onclick="stop_button()">Stop</button>
-        <button onclick="left_button()">Left</button>
-        <button onclick="right_button()">Right</button>
+        <div class="ts-center">
+            <button class="ts-button is-large is-circular" onclick="forward_button()">Forward</button>
+            <br>
+            <div class="ts-row">
+                <button class="ts-button is-large is-circular" onclick="left_button()">Left</button>
+                <button class="ts-button is-large is-circular" onclick="stop_button()">Stop</button>
+                <button class="ts-button is-large is-circular" onclick="right_button()">Right</button>
+            </div>
+            <br>
+            <button class="ts-button is-large is-circular" onclick="backward_button()">Backward</button>
+        </div>
     </body>
 </html>
