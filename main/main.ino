@@ -59,6 +59,14 @@ void HttpPostRight(AsyncWebServerRequest *request) {
   request->send(200);
 }
 
+void Tocas_CSS(AsyncWebServerRequest *request) {
+  request->send(SPIFFS, "/tocas.min.css", "text/css");
+}
+
+void Tocas_JS(AsyncWebServerRequest *request) {
+  request->send(SPIFFS, "/tocas.min.js", "text/javascript");
+}
+
 void setup() {
   Serial.begin(9600);
 
@@ -99,6 +107,9 @@ void setup() {
   server.on("/stop", HTTP_POST, HttpPostStop);
   server.on("/left", HTTP_POST, HttpPostLeft);
   server.on("/right", HTTP_POST, HttpPostRight);
+
+  server.on("/tocas.min.css", HTTP_GET, Tocas_CSS);
+  server.on("/tocas.min.js", HTTP_GET, Tocas_JS);
 
   server.begin();
 }
